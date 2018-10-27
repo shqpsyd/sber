@@ -1,2 +1,2 @@
 # sber
-an app mimic uber use sgx
+an app mimic uber using sgx
