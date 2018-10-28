@@ -11,7 +11,7 @@
 
 using namespace std;
 
-#define MAXLINE 5
+#define MAXLINE 1024
 #define OPEN_MAX 100
 #define LISTENQ 20
 #define SERV_PORT 8080
@@ -133,7 +133,7 @@ int main(int argc, char* argv[])
             else if(events[i].events&EPOLLIN)
 
             {
-                cout << "EPOLLIN" << endl;
+                //cout << "EPOLLIN" << endl;
                 if ( (sockfd = events[i].data.fd) < 0)
                     continue;
                 if ( (n = read(sockfd, line, MAXLINE)) < 0) {
@@ -145,25 +145,34 @@ int main(int argc, char* argv[])
                 } else if (n == 0) {
                     close(sockfd);
                     events[i].data.fd = -1;
+                    
                 }
-                line[n] = '/0';
-                cout << "read " << line << endl;
+                
                 //set fd for write
-
                 ev.data.fd=sockfd;
                 
                 //expect write next time
                 ev.events=EPOLLOUT|EPOLLET;
-                //change registerd ev
+                
+                if(n != 0) {
+                    line[n] = '\0';
+                    cout << "read " << line << endl;
+                    //change registerd ev
+                    epoll_ctl(epfd,EPOLL_CTL_MOD,sockfd,&ev);
+                }else {                  
+                    std::cout<<"end connection\n";  
+                    epoll_ctl(epfd,EPOLL_CTL_DEL,sockfd,&ev);
+                }           
+                    
 
-                epoll_ctl(epfd,EPOLL_CTL_MOD,sockfd,&ev);
+
 
             }
             else if(events[i].events&EPOLLOUT)
 
             {
                 sockfd = events[i].data.fd;
-                write(sockfd, line, n);
+                write(sockfd, "hello from server", n);
                 //set ev
 
                 ev.data.fd=sockfd;

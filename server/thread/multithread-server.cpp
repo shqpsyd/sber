@@ -19,7 +19,7 @@ class Server {
 	}
 	public: 
 			Server(int PORT = 8080);
-			int handle(int);
+			void handle(int);
 			
 
 	private: 
@@ -27,7 +27,7 @@ class Server {
 	
 };
 
-int Server::handle(int socket) {	
+void Server::handle(int socket) {	
 	char buffer[1024] = {0};	
 	do {
 		int valread = read( socket , buffer, 1024); 
@@ -37,7 +37,7 @@ int Server::handle(int socket) {
 		printf("echo message sent\n");	
 	} while(!eof(buffer, strlen(buffer)));
 	printf("here");
-	return 0; 
+	return ; 
 }
 
 Server::Server(int PORT){
@@ -95,7 +95,11 @@ Server::Server(int PORT){
 		if(new_socket != prev) {
 			prev = new_socket;			
 			std::thread t(std::bind(&Server::handle,this,new_socket));
-			t.join();			
+			t.join();	
+			count++;		
+		}
+		if(count == 2) {
+			break;
 		}
 		
 	}
