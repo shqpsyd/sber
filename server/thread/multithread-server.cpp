@@ -96,7 +96,7 @@ Server::Server(int PORT){
 			prev = new_socket;			
 			std::thread t(std::bind(&Server::handle,this,new_socket));
 			t.join();	
-			count++;		
+			//count++;		
 		}
 		if(count == 2) {
 			break;
