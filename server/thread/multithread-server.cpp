@@ -7,7 +7,7 @@
 #include <string.h> 
 #include <thread>
 #include <iostream>
-
+//unknown reason for sudden exit
 class Server {
 	inline bool eof(char* arr, int length) {
 		printf("juding eof");
